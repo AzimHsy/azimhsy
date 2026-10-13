@@ -1,0 +1,12 @@
+{
+  "name": "azimhsy-profile",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "opentype.js": "2.0.0",
+    "simple-icons": "16.35.0"
+  }
+}
