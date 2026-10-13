@@ -54,12 +54,13 @@ The risky core of an online store, tested end to end: atomic stock, idempotent p
 A cursor mask that reveals a second layer of the page as you move.<br>
 <sub>Next.js · Framer Motion · Sass</sub>
 
-<br>
-
+<p align="right">
+<img src="./assets/bunny.gif" width="150" alt="Cinnamoroll waving hi">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/footer-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/footer-light.svg">
-  <img alt="Let’s work together — hello@nurfitriazim.com" src="./assets/footer-dark.svg" width="100%">
+  <img alt="Say hi — hello@nurfitriazim.com" src="./assets/footer-dark.svg" width="100%">
 </picture>
+</p>
 
 <p align="right"><sub><a href="https://nurfitriazim.com">nurfitriazim.com</a> · <a href="mailto:hello@nurfitriazim.com">hello@nurfitriazim.com</a></sub></p>

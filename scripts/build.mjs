@@ -15,14 +15,21 @@ const fontDir = path.join(root, 'scripts/fonts');
 
 const loadFont = (file) => opentype.parse(new Uint8Array(fs.readFileSync(path.join(fontDir, file))).buffer);
 const font = {
-  light: loadFont('Geist-Light.ttf'),
   regular: loadFont('Geist-Regular.ttf'),
   semibold: loadFont('Geist-SemiBold.ttf'),
 };
 
+// GitHub's own palette, so the images sit in the page like native widgets.
+// levels = contribution-graph greens, empty → most.
 const themes = {
-  dark: { bg: '#0a0a0a', fg: '#f5f5f5', soft: '#cfcfcf', muted: '#7a7a7a', line: '#262626' },
-  light: { bg: '#f4f4f2', fg: '#0a0a0a', soft: '#2e2e2e', muted: '#6e6e6e', line: '#dad9d5' },
+  dark: {
+    bg: '#0d1117', fg: '#f0f6fc', soft: '#d1d7e0', muted: '#9198a1', line: '#3d444d',
+    levels: ['#151b23', '#033a16', '#196c2e', '#2ea043', '#56d364'],
+  },
+  light: {
+    bg: '#ffffff', fg: '#1f2328', soft: '#31373d', muted: '#59636e', line: '#d1d9e0',
+    levels: ['#eff2f5', '#aceebb', '#4ac26b', '#2da44e', '#116329'],
+  },
 };
 
 // ---------- text → path ----------
@@ -57,57 +64,121 @@ ${body}
 </svg>
 `;
 
-const card = (w, h, t, id) =>
-  `<clipPath id="${id}"><rect width="${w}" height="${h}" rx="18"/></clipPath>
-<rect width="${w}" height="${h}" rx="18" fill="${t.bg}"/>`;
+const card = (w, h, t) =>
+  `<rect x="1" y="1" width="${w - 2}" height="${h - 2}" rx="12" fill="${t.bg}" stroke="${t.line}" stroke-width="2"/>`;
 
-// ---------- banner ----------
-function banner(t) {
-  const W = 1600, H = 640;
-  const name = text(font.regular, 'Nurfitri Azim', 56, 86, 30);
-  const where = text(font.regular, '(KUALA LUMPUR, MALAYSIA)', 1544, 84, 20, { tracking: 0.14, align: 'end' });
-  const role1 = text(font.light, 'Full-stack Developer &', 1040, 222, 34);
-  const role2 = text(font.light, 'UI/UX Designer', 1040, 266, 34);
-  const open = text(font.regular, 'OPEN FOR PROJECTS', 1064, 322, 18, { tracking: 0.14 });
+// ---------- pixel letters (5×7, like the contribution graph's 7 rows) ----------
+const GLYPHS = {
+  A: ['.###.', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+  Z: ['#####', '....#', '...#.', '..#..', '.#...', '#....', '#####'],
+  I: ['###', '.#.', '.#.', '.#.', '.#.', '.#.', '###'],
+  M: ['#...#', '##.##', '#.#.#', '#...#', '#...#', '#...#', '#...#'],
+  S: ['.####', '#....', '#....', '.###.', '....#', '....#', '####.'],
+  Y: ['#...#', '#...#', '.#.#.', '..#..', '..#..', '..#..', '..#..'],
+  H: ['#...#', '#...#', '#...#', '#####', '#...#', '#...#', '#...#'],
+  ' ': ['..', '..', '..', '..', '..', '..', '..'],
+};
 
-  // Giant marquee, like the hero on nurfitriazim.com
-  const big = text(font.semibold, 'NURFITRI AZIM — ', 0, 0, 270, { tracking: -0.025 });
-  const span = Math.round(big.width);
-
-  return svg(W, H, 'Nurfitri Azim — Full-stack Developer and UI/UX Designer, Kuala Lumpur', `
-<style>
-  .marquee { animation: marquee 24s linear infinite; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-${span}px); } }
-  .plus { transform-box: fill-box; transform-origin: center; animation: plus 6s cubic-bezier(.7,0,.2,1) infinite; }
-  @keyframes plus { 0%, 65% { transform: rotate(0deg); } 85%, 100% { transform: rotate(90deg); } }
-  .underline { transform-box: fill-box; transform-origin: left center; animation: underline 6s infinite; }
-  @keyframes underline {
-    0% { transform: translateX(0) scaleX(0); animation-timing-function: cubic-bezier(.7,0,.2,1); }
-    18%, 62% { transform: translateX(0) scaleX(1); animation-timing-function: cubic-bezier(.7,0,.2,1); }
-    80%, 100% { transform: translateX(${name.width.toFixed(1)}px) scaleX(0); }
+// Returns the set of lit cells ("col,row") for a word, and its width in columns.
+function spell(word) {
+  const on = new Set();
+  let col = 0;
+  for (const ch of word) {
+    const g = GLYPHS[ch];
+    g.forEach((row, r) => [...row].forEach((v, c) => v === '#' && on.add(`${col + c},${r}`)));
+    col += g[0].length + 1;
   }
+  return { on, width: col - 1 };
+}
+
+// Seeded so every build draws the same "activity".
+function rng(seed) {
+  return () => {
+    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+    let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const PITCH = 1428 / 53; // 53 weeks across the banner's grid area
+const SQ = 21;
+
+// ---------- banner: a year of contributions with the name lit up ----------
+function banner(t) {
+  const W = 1600, H = 486, x0 = 116, y0 = 214, COLS = 53, TODAY_ROW = 3; // Wednesday
+  const rand = rng(14);
+  const name = spell('AZIM');
+  const start = Math.floor((COLS - name.width) / 2);
+  const lit = new Set([...name.on].map((k) => { const [c, r] = k.split(',').map(Number); return `${c + start},${r}`; }));
+
+  const title = text(font.semibold, 'Nurfitri Azim', 56, 96, 40);
+  const sub = text(font.regular, 'Full-stack developer & UI/UX designer · Kuala Lumpur, Malaysia', 56, 138, 22);
+  const open = text(font.regular, 'Open for projects', 1544, 94, 22, { align: 'end' });
+  const note = text(font.regular, 'Most of my work lives in private client repos.', x0, 452, 18);
+
+  // Month labels: column 52 is the week of 11 Oct 2026.
+  const months = [];
+  let prev = -1, lastCol = -9;
+  for (let c = 0; c < COLS; c++) {
+    const d = new Date(Date.UTC(2026, 9, 11) - (52 - c) * 7 * 864e5);
+    const m = d.getUTCMonth();
+    if (m !== prev && c - lastCol >= 3) {
+      months.push(text(font.regular, d.toLocaleString('en', { month: 'short', timeZone: 'UTC' }), x0 + c * PITCH, y0 - 18, 17).d);
+      lastCol = c;
+    }
+    prev = m;
+  }
+  const days = [[1, 'Mon'], [3, 'Wed'], [5, 'Fri']].map(([r, l]) => text(font.regular, l, 56, y0 + r * PITCH + 16, 17).d);
+
+  const cells = [];
+  const live = [];
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < 7; r++) {
+      if (c === COLS - 1 && r > TODAY_ROW) continue; // the rest of this week hasn't happened yet
+      const key = `${c},${r}`;
+      const near = c >= start - 1 && c <= start + name.width;
+      let level = 0;
+      if (lit.has(key)) level = 4;
+      else if (near) level = 0; // keep the name's surroundings clean so it reads
+      else if (rand() < 0.42) { const v = rand(); level = v < 0.55 ? 1 : v < 0.86 ? 2 : 3; }
+      const x = (x0 + c * PITCH).toFixed(1), y = (y0 + r * PITCH).toFixed(1);
+      // Background squares land first in a left-to-right sweep, then the name.
+      const delay = level === 4 ? 1500 + (c - start) * 45 + r * 12 : c * 24 + r * 5;
+      let cls = 'c';
+      if (level !== 4 && !near && rand() < 0.05) { cls = `c live${level >= 2 ? 'down' : 'up'}`; live.push(1); }
+      const liveDelay = cls === 'c' ? '' : `,${(3 + rand() * 6).toFixed(1)}s`;
+      cells.push(`<rect class="${cls}" x="${x}" y="${y}" width="${SQ}" height="${SQ}" rx="4" fill="${t.levels[level]}" style="animation-delay:${delay}ms${liveDelay}"/>`);
+    }
+  }
+
+  const legendX = 1544 - 5 * 26 - 46;
+  const less = text(font.regular, 'Less', legendX - 10, 452, 18, { align: 'end' });
+  const more = text(font.regular, 'More', legendX + 5 * 26 + 6, 452, 18);
+  const legend = t.levels.map((col, i) => `<rect x="${legendX + i * 26}" y="438" width="18" height="18" rx="4" fill="${col}"/>`).join('');
+
+  return svg(W, H, 'Nurfitri Azim — full-stack developer and UI/UX designer. A contribution graph with the name AZIM lit up.', `
+<style>
+  .c { animation: land .5s ease-out both; }
+  .liveup { animation: land .5s ease-out both, up 7s ease-in-out infinite; }
+  .livedown { animation: land .5s ease-out both, down 7s ease-in-out infinite; }
+  @keyframes land { from { fill: ${t.levels[0]}; } }
+  @keyframes up { 0%, 30%, 100% { } 55%, 75% { fill: ${t.levels[3]}; } }
+  @keyframes down { 0%, 30%, 100% { } 55%, 75% { fill: ${t.levels[0]}; } }
   .dot { animation: dot 2.4s ease-in-out infinite; }
-  @keyframes dot { 50% { opacity: .25; } }
-  @media (prefers-reduced-motion: reduce) { .marquee, .plus, .underline, .dot { animation: none; } }
+  @keyframes dot { 50% { opacity: .3; } }
+  @media (prefers-reduced-motion: reduce) { .c, .liveup, .livedown, .dot { animation: none; } }
 </style>
-<defs><path id="big" d="${big.d}"/></defs>
-${card(W, H, t, 'c')}
-<g clip-path="url(#c)">
-  <path d="${name.d}" fill="${t.fg}"/>
-  <rect class="underline" x="56" y="98" height="2" width="${name.width.toFixed(1)}" fill="${t.fg}"/>
-  <path d="${where.d}" fill="${t.muted}"/>
-  <g class="plus"><rect x="318" y="196" width="84" height="10" fill="${t.fg}"/><rect x="355" y="159" width="10" height="84" fill="${t.fg}"/></g>
-  <path d="${role1.d}" fill="${t.soft}"/>
-  <path d="${role2.d}" fill="${t.soft}"/>
-  <circle class="dot" cx="1047" cy="316" r="6" fill="${t.fg}"/>
-  <path d="${open.d}" fill="${t.muted}"/>
-  <g transform="translate(-420 606)">
-    <g class="marquee" fill="${t.fg}">
-      <use href="#big"/>
-      <use href="#big" x="${span}"/>
-    </g>
-  </g>
-</g>`);
+${card(W, H, t)}
+<path d="${title.d}" fill="${t.fg}"/>
+<path d="${sub.d}" fill="${t.muted}"/>
+<circle class="dot" cx="${(1544 - open.width - 18).toFixed(1)}" cy="87" r="7" fill="${t.levels[3]}"/>
+<path d="${open.d}" fill="${t.soft}"/>
+<g fill="${t.muted}">${months.map((d) => `<path d="${d}"/>`).join('')}${days.map((d) => `<path d="${d}"/>`).join('')}</g>
+${cells.join('\n')}
+<path d="${note.d}" fill="${t.muted}"/>
+<g fill="${t.muted}"><path d="${less.d}"/><path d="${more.d}"/></g>
+${legend}`);
 }
 
 // ---------- stack grid ----------
@@ -136,42 +207,51 @@ function stackGrid(t) {
   }).join('\n');
 
   return svg(W, H, `Stack: ${stack.map(([l]) => l).join(', ')}`, `
-${card(W, H, t, 'c')}
+<clipPath id="c"><rect width="${W}" height="${H}" rx="12"/></clipPath>
+${card(W, H, t)}
 <g clip-path="url(#c)">${lines}
 ${cells}
-</g>
-<rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="17" fill="none" stroke="${t.line}" stroke-width="2"/>`);
+</g>`);
 }
 
-// ---------- footer ----------
+// ---------- footer: SAY HI in contribution squares, on a loop ----------
 function footer(t) {
-  const W = 1600, H = 340;
-  const label = text(font.regular, '(CONTACT)', 56, 80, 20, { tracking: 0.14 });
-  const mail = text(font.regular, 'hello@nurfitriazim.com', 1500, 82, 28, { align: 'end' });
-  const big = text(font.semibold, 'LET’S WORK TOGETHER — ', 0, 0, 190, { tracking: -0.025 });
-  const span = Math.round(big.width);
+  const W = 1600, H = 300, x0 = 56, y0 = 58;
+  const word = spell('SAY HI');
+  const COLS = word.width + 2; // one empty column either side
+  const cells = [];
+  for (let c = 0; c < COLS; c++) {
+    for (let r = 0; r < 7; r++) {
+      const on = word.on.has(`${c - 1},${r}`);
+      const x = (x0 + c * PITCH).toFixed(1), y = (y0 + r * PITCH).toFixed(1);
+      cells.push(on
+        ? `<rect class="say" x="${x}" y="${y}" width="${SQ}" height="${SQ}" rx="4" fill="${t.levels[4]}" style="animation-delay:${c * 40 + r * 10}ms"/>`
+        : `<rect x="${x}" y="${y}" width="${SQ}" height="${SQ}" rx="4" fill="${t.levels[0]}"/>`);
+    }
+  }
+  const tx = 1000;
+  const head = text(font.semibold, 'Got a store to build?', tx, 124, 40);
+  const mail = text(font.regular, 'hello@nurfitriazim.com', tx, 182, 30);
+  const site = text(font.regular, 'nurfitriazim.com · Kuala Lumpur', tx, 226, 20);
+  const ax = tx + mail.width + 14;
 
-  return svg(W, H, 'Let’s work together — hello@nurfitriazim.com', `
+  return svg(W, H, 'Say hi — hello@nurfitriazim.com', `
 <style>
-  .marquee { animation: marquee 26s linear infinite; }
-  @keyframes marquee { from { transform: translateX(-${span}px); } to { transform: translateX(0); } }
-  @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+  .say { animation: say 9s ease-in-out infinite both; }
+  @keyframes say {
+    0%, 4% { fill: ${t.levels[0]}; }
+    9% { fill: ${t.levels[2]}; }
+    14%, 82% { fill: ${t.levels[4]}; }
+    92%, 100% { fill: ${t.levels[0]}; }
+  }
+  @media (prefers-reduced-motion: reduce) { .say { animation: none; } }
 </style>
-<defs><path id="big" d="${big.d}"/></defs>
-${card(W, H, t, 'c')}
-<g clip-path="url(#c)">
-  <path d="${label.d}" fill="${t.muted}"/>
-  <path d="${mail.d}" fill="${t.fg}"/>
-  <path d="M1518 86L1542 62M1522 62H1542V82" fill="none" stroke="${t.fg}" stroke-width="3"/>
-  <path d="M56 122H1544" stroke="${t.line}" stroke-width="2"/>
-  <g transform="translate(0 302)">
-    <g class="marquee" fill="${t.fg}">
-      <use href="#big"/>
-      <use href="#big" x="${span}"/>
-      <use href="#big" x="${span * 2}"/>
-    </g>
-  </g>
-</g>`);
+${card(W, H, t)}
+${cells.join('\n')}
+<path d="${head.d}" fill="${t.fg}"/>
+<path d="${mail.d}" fill="${t.fg}"/>
+<path d="M${ax} 182L${ax + 20} 162M${ax + 4} 162H${ax + 20}V178" fill="none" stroke="${t.fg}" stroke-width="2.5"/>
+<path d="${site.d}" fill="${t.muted}"/>`);
 }
 
 fs.mkdirSync(out, { recursive: true });
