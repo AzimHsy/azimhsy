@@ -3,11 +3,12 @@
 
 <style>
   .c { animation: land .5s ease-out both; }
-  .liveup { animation: land .5s ease-out both, up 7s ease-in-out infinite; }
-  .livedown { animation: land .5s ease-out both, down 7s ease-in-out infinite; }
+  /* "live" squares step through real levels (no fades, so every colour stays on-palette) */
+  .liveup { animation: land .5s ease-out both, up 7s step-end infinite; }
+  .livedown { animation: land .5s ease-out both, down 7s step-end infinite; }
   @keyframes land { from { fill: #eff2f5; } }
-  @keyframes up { 0%, 30%, 100% { } 55%, 75% { fill: #2da44e; } }
-  @keyframes down { 0%, 30%, 100% { } 55%, 75% { fill: #eff2f5; } }
+  @keyframes up { 45% { fill: #aceebb; } 50% { fill: #4ac26b; } 55%, 75% { fill: #2da44e; } 80% { fill: #4ac26b; } 85% { fill: #aceebb; } }
+  @keyframes down { 45% { fill: #aceebb; } 50%, 75% { fill: #eff2f5; } 80% { fill: #aceebb; } }
   .dot { animation: dot 2.4s ease-in-out infinite; }
   @keyframes dot { 50% { opacity: .3; } }
   @media (prefers-reduced-motion: reduce) { .c, .liveup, .livedown, .dot { animation: none; } }

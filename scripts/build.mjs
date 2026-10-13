@@ -160,11 +160,12 @@ function banner(t) {
   return svg(W, H, 'Nurfitri Azim — full-stack developer and UI/UX designer. A contribution graph with the name AZIM lit up.', `
 <style>
   .c { animation: land .5s ease-out both; }
-  .liveup { animation: land .5s ease-out both, up 7s ease-in-out infinite; }
-  .livedown { animation: land .5s ease-out both, down 7s ease-in-out infinite; }
+  /* "live" squares step through real levels (no fades, so every colour stays on-palette) */
+  .liveup { animation: land .5s ease-out both, up 7s step-end infinite; }
+  .livedown { animation: land .5s ease-out both, down 7s step-end infinite; }
   @keyframes land { from { fill: ${t.levels[0]}; } }
-  @keyframes up { 0%, 30%, 100% { } 55%, 75% { fill: ${t.levels[3]}; } }
-  @keyframes down { 0%, 30%, 100% { } 55%, 75% { fill: ${t.levels[0]}; } }
+  @keyframes up { 45% { fill: ${t.levels[1]}; } 50% { fill: ${t.levels[2]}; } 55%, 75% { fill: ${t.levels[3]}; } 80% { fill: ${t.levels[2]}; } 85% { fill: ${t.levels[1]}; } }
+  @keyframes down { 45% { fill: ${t.levels[1]}; } 50%, 75% { fill: ${t.levels[0]}; } 80% { fill: ${t.levels[1]}; } }
   .dot { animation: dot 2.4s ease-in-out infinite; }
   @keyframes dot { 50% { opacity: .3; } }
   @media (prefers-reduced-motion: reduce) { .c, .liveup, .livedown, .dot { animation: none; } }
