@@ -38,21 +38,21 @@ I’m Azim, a full-stack developer and UI/UX designer from Kuala Lumpur. I desig
 
 ###### (SELECTED WORK)
 
-**01 — [Revelio](https://github.com/AzimHsy/Revelio)**<br>
+**01 — [Motion Lab](https://motionlab.digital)**<br>
+Website for a creative film agency, built around an infinite film carousel you drag and throw like a reel.<br>
+<sub>Next.js · Framer Motion · GSAP · Lenis · live site</sub>
+
+**02 — [TH Studio](https://thstudio.site)**<br>
+Portfolio for a visual storyteller and art director: cases in art direction, branding and interactive work, with smooth scroll-driven motion.<br>
+<sub>Next.js · GSAP ScrollTrigger · Lenis · live site</sub>
+
+**03 — [Revelio](https://github.com/AzimHsy/Revelio)**<br>
 A Chrome extension that reads the animation on any web page and writes the GSAP code to rebuild it, using the Claude API.<br>
 <sub>React · Vite · Chrome MV3 · Claude API</sub>
 
-**02 — [Scroll to Play](https://github.com/AzimHsy/Scroll-to-Play)**<br>
-A 96-frame image sequence on canvas, scrubbed by scroll, so the page plays like a film.<br>
-<sub>Next.js · GSAP ScrollTrigger · Lenis · Framer Motion</sub>
-
-**03 — [nest-commerce](https://github.com/AzimHsy/nest-commerce)**<br>
+**04 — [nest-commerce](https://github.com/AzimHsy/nest-commerce)**<br>
 The risky core of an online store, tested end to end: atomic stock, idempotent payment webhooks, price snapshots and vouchers.<br>
 <sub>NestJS · Prisma · PostgreSQL · Next.js</sub>
-
-**04 — [Cursor Animation](https://github.com/AzimHsy/Cursor-Animation)**<br>
-A cursor mask that reveals a second layer of the page as you move.<br>
-<sub>Next.js · Framer Motion · Sass</sub>
 
 <p align="right">
 <img src="./assets/bunny.gif" width="150" alt="Cinnamoroll waving hi">
