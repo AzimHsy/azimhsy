@@ -43,7 +43,8 @@ const themes = {
 };
 
 const WORK = [
-  ['motionlab', 'motionlab.digital', 'Motion Lab', 'Film agency site with a reel you drag and throw', 'Next.js   Framer Motion   GSAP   Lenis'],
+  // Azim's own capture, wider than 16:10: shown whole on the site's black instead of cropped
+  ['motionlab', 'motionlab.digital', 'Motion Lab', 'Film agency site with a reel you drag and throw', 'Next.js   Framer Motion   GSAP   Lenis', { fit: '#000000' }],
   ['pxnch', 'pxnchsociety.com', 'PXNCH', 'Online store for a custom jersey printer', 'Next.js   Supabase   Cloudflare Workers'],
   ['thstudio', 'thstudio.site', 'TH Studio', 'Portfolio for an art director, all scroll-driven', 'Next.js   GSAP ScrollTrigger   Lenis'],
   ['brave', 'bravemy.com', 'Brave', 'Kids’ playwear store with its own checkout and admin', 'Next.js   Supabase   toyyibPay   GSAP'],
@@ -208,11 +209,13 @@ function hero(t) {
 }
 
 // ---------- one row per project: screenshot, name, line, stack, link ----------
-function workRow(t, [, site, name, blurb, tags], last) {
+function workRow(t, [, site, name, blurb, tags, opts = {}], last) {
   const W = 1600;
   const H = 236;
   let b = `<rect width="${W}" height="${H}" fill="${t.bg}"/>`;
-  b += `<image href="data:image/jpeg;base64,${shot(site)}" x="0" y="18" width="320" height="200" preserveAspectRatio="xMidYMin slice" clip-path="url(#th)"/>`;
+  // opts.fit = a background colour: show the whole capture on it instead of cropping to fill
+  if (opts.fit) b += `<rect x="0" y="18" width="320" height="200" rx="12" fill="${opts.fit}"/>`;
+  b += `<image href="data:image/jpeg;base64,${shot(site)}" x="0" y="18" width="320" height="200" preserveAspectRatio="${opts.fit ? 'xMidYMid meet' : 'xMidYMin slice'}" clip-path="url(#th)"/>`;
   b += `<rect x="0.5" y="18.5" width="319" height="199" rx="12" fill="none" stroke="${t.line}"/>`;
   b += T(F.semi, name, 368, 86, 40, t.fg);
   b += T(F.regular, blurb, 368, 134, 28, t.muted);
