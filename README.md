@@ -1,66 +1,43 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/banner-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/banner-light.svg">
-  <img alt="Nurfitri Azim — Full-stack Developer and UI/UX Designer, Kuala Lumpur" src="./assets/banner-dark.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/hero-light.svg">
+  <img alt="Nurfitri Azim, designer who builds websites that move, with a year of contributions" src="./assets/hero-dark.svg" width="100%">
 </picture>
 
-###### (INTRODUCTION)
-
-### I craft premium digital experiences where bold design meets clean code — turning ideas into websites that truly perform.
-
-I’m Azim, a full-stack developer and UI/UX designer from Kuala Lumpur. I design and build online stores and websites for Malaysian businesses, from the first sketch to the checkout, the courier booking and the admin panel the owner uses every day. I’m also studying Software Development at UTeM.
-
-<br>
-
-###### (WHAT I DO)
-
-**Custom online stores** — Next.js with Supabase or Payload CMS, prices checked on the server, Malaysian payment gateways (CHIP, toyyibPay, HitPay) and Ninja Van shipping.
-
-**Shopify, EasyStore & WooCommerce** — theme work, custom sections, catalogue imports and full store revamps.
-
-**Brand sites with motion** — scroll-driven storytelling with GSAP and Framer Motion, designed in Figma first.
-
-<sub>10+ client projects since I started freelancing in 2026, across fashion, beauty, automotive and sportswear. Client repos are private, but I’m happy to walk you through the work on a call.</sub>
-
-<br>
-
-###### (STACK)
-
-<p>
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/stack-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/stack-light.svg">
-  <img alt="Stack: Next.js, React, TypeScript, Tailwind CSS, Supabase, Payload CMS, PostgreSQL, Cloudflare, GSAP, Framer Motion, Shopify, Figma" src="./assets/stack-dark.svg" width="100%">
-</picture>
-</p>
-
-<br>
+I’m Azim. I design and build websites and online stores for Malaysian businesses, from the first sketch to the checkout and the admin panel the owner uses every day. Software Development student at UTeM.
 
 ###### (SELECTED WORK)
 
-**01 — [Motion Lab](https://motionlab.digital)**<br>
-Website for a creative film agency, built around an infinite film carousel you drag and throw like a reel.<br>
-<sub>Next.js · Framer Motion · GSAP · Lenis · live site</sub>
+<a href="https://motionlab.digital" title="Open motionlab.digital"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-motionlab-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-motionlab-light.svg"><img alt="Motion Lab: film agency site with a reel you drag and throw" src="./assets/work-motionlab-dark.svg" width="100%"></picture></a>
+<a href="https://pxnchsociety.com" title="Open pxnchsociety.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-pxnch-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-pxnch-light.svg"><img alt="PXNCH: online store for a custom jersey printer" src="./assets/work-pxnch-dark.svg" width="100%"></picture></a>
+<a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director, all scroll-driven" src="./assets/work-thstudio-dark.svg" width="100%"></picture></a>
+<a href="https://bravemy.com" title="Open bravemy.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-brave-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-brave-light.svg"><img alt="Brave: kids’ playwear store with its own checkout and admin" src="./assets/work-brave-dark.svg" width="100%"></picture></a>
 
-**02 — [TH Studio](https://thstudio.site)**<br>
-Portfolio for a visual storyteller and art director: cases in art direction, branding and interactive work, with smooth scroll-driven motion.<br>
-<sub>Next.js · GSAP ScrollTrigger · Lenis · live site</sub>
+###### (WHAT I DO)
 
-**03 — [Revelio](https://github.com/AzimHsy/Revelio)**<br>
-A Chrome extension that reads the animation on any web page and writes the GSAP code to rebuild it, using the Claude API.<br>
-<sub>React · Vite · Chrome MV3 · Claude API</sub>
-
-**04 — [nest-commerce](https://github.com/AzimHsy/nest-commerce)**<br>
-The risky core of an online store, tested end to end: atomic stock, idempotent payment webhooks, price snapshots and vouchers.<br>
-<sub>NestJS · Prisma · PostgreSQL · Next.js</sub>
-
-<p align="right">
-<img src="./assets/bunny.gif" width="150" alt="Cinnamoroll waving hi">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/footer-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/footer-light.svg">
-  <img alt="Say hi — hello@nurfitriazim.com" src="./assets/footer-dark.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/services-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/services-light.svg">
+  <img alt="Online stores: Next.js with Supabase or Payload, prices checked on the server, CHIP, toyyibPay or HitPay at checkout, Ninja Van shipping. Store revamps: Shopify, EasyStore and WooCommerce. Sites that move: scroll-driven stories in GSAP and Framer Motion, designed in Figma first." src="./assets/services-dark.svg" width="100%">
 </picture>
-</p>
 
-<p align="right"><sub><a href="https://nurfitriazim.com">nurfitriazim.com</a> · <a href="mailto:hello@nurfitriazim.com">hello@nurfitriazim.com</a></sub></p>
+###### (STACK)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/stack-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/stack-light.svg">
+  <img alt="Stack: Next.js, React, TypeScript, Tailwind CSS, Supabase, Payload CMS, PostgreSQL, Cloudflare, GSAP, Framer Motion, Shopify, Figma, Expo, WooCommerce" src="./assets/stack-dark.svg" width="100%">
+</picture>
+
+<details>
+<summary><b>What I’m up to now</b></summary>
+<br>
+
+Building **Sedapify v2**, an AI recipe app in Expo. Semester 5 of Software Development at UTeM. A few client stores alongside.
+</details>
+
+<br>
+
+<a href="mailto:hello@nurfitriazim.com" title="Email hello@nurfitriazim.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/footer-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/footer-light.svg"><img alt="Got a store to build? Email hello@nurfitriazim.com" src="./assets/footer-dark.svg" width="100%"></picture></a>
+
+<p align="right"><img src="./assets/bunny.gif" width="110" alt="Cinnamoroll waving hi"></p>
