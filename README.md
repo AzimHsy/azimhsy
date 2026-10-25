@@ -8,10 +8,14 @@ I’m Azim. I design and build websites and online stores for Malaysian business
 
 ###### (SELECTED WORK)
 
-<a href="https://motionlab.digital" title="Open motionlab.digital"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-motionlab-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-motionlab-light.svg"><img alt="Motion Lab: film agency site with a reel you drag and throw" src="./assets/work-motionlab-dark.svg" width="100%"></picture></a>
-<a href="https://pxnchsociety.com" title="Open pxnchsociety.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-pxnch-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-pxnch-light.svg"><img alt="PXNCH: online store for a custom jersey printer" src="./assets/work-pxnch-dark.svg" width="100%"></picture></a>
-<a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director, all scroll-driven" src="./assets/work-thstudio-dark.svg" width="100%"></picture></a>
-<a href="https://bravemy.com" title="Open bravemy.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/work-brave-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/work-brave-light.svg"><img alt="Brave: kids’ playwear store with its own checkout and admin" src="./assets/work-brave-dark.svg" width="100%"></picture></a>
+<p>
+<a href="https://motionlab.digital" title="Open motionlab.digital"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-motionlab-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-motionlab-light.svg"><img alt="Motion Lab: film agency site with a reel you drag and throw" src="./assets/card-motionlab-dark.svg" width="49%"></picture></a>
+<a href="https://homlux.nurfitriazim.com" title="Open homlux.nurfitriazim.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-homlux-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-homlux-light.svg"><img alt="Homlux: scroll-driven homepage for an interior studio, design by Afdzal Design" src="./assets/card-homlux-dark.svg" width="49%"></picture></a>
+</p>
+<p>
+<a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director that scrolls sideways" src="./assets/card-thstudio-dark.svg" width="49%"></picture></a>
+<a href="https://bravemy.com" title="Open bravemy.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-brave-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-brave-light.svg"><img alt="Brave: kids’ playwear store with its own checkout and admin" src="./assets/card-brave-dark.svg" width="49%"></picture></a>
+</p>
 
 ###### (WHAT I DO)
 

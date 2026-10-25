@@ -42,12 +42,16 @@ const themes = {
   },
 };
 
+// Selected Work, a 2×2 grid. Each preview moves the way the site does:
+// pan 'y' = a full-page capture scrolling down, pan 'x' = a wide capture sliding sideways.
+// Captures: full page at 1440 wide (scrolled through first so lazy sections render);
+// TH Studio = six viewport frames joined side by side (its scroll is horizontal);
+// Motion Lab = Azim's own poster-wall capture (the page itself doesn't scroll).
 const WORK = [
-  // Azim's own capture, wider than 16:10: shown whole on the site's black instead of cropped
-  ['motionlab', 'motionlab.digital', 'Motion Lab', 'Film agency site with a reel you drag and throw', 'Next.js   Framer Motion   GSAP   Lenis', { fit: '#000000' }],
-  ['pxnch', 'pxnchsociety.com', 'PXNCH', 'Online store for a custom jersey printer', 'Next.js   Supabase   Cloudflare Workers'],
-  ['thstudio', 'thstudio.site', 'TH Studio', 'Portfolio for an art director, all scroll-driven', 'Next.js   GSAP ScrollTrigger   Lenis'],
-  ['brave', 'bravemy.com', 'Brave', 'Kids’ playwear store with its own checkout and admin', 'Next.js   Supabase   toyyibPay   GSAP'],
+  ['motionlab', 'motionlab.digital', 'Motion Lab', 'Film agency site with a reel you drag and throw', 'Next.js   Framer Motion   GSAP   Lenis', { shot: 'motionlab.digital.jpg', pan: 'x', dur: 12 }],
+  ['homlux', 'homlux.nurfitriazim.com', 'Homlux', 'Scroll-driven homepage for an interior studio', 'Next.js   GSAP ScrollTrigger   Lenis   Design: Afdzal', { shot: 'homlux.jpg', pan: 'y', dur: 30 }],
+  ['thstudio', 'thstudio.site', 'TH Studio', 'Portfolio for an art director that scrolls sideways', 'Next.js   GSAP ScrollTrigger   Lenis', { shot: 'thstudio.jpg', pan: 'x', dur: 30 }],
+  ['brave', 'bravemy.com', 'Brave', 'Kids’ playwear store with its own checkout and admin', 'Next.js   Supabase   toyyibPay   GSAP', { shot: 'bravemy.jpg', pan: 'y', dur: 30 }],
 ];
 
 // ---------- text → path ----------
@@ -153,7 +157,18 @@ const level = (() => {
   const cuts = [q(0.25), q(0.5), q(0.75)];
   return (n) => (n === 0 ? 0 : n <= cuts[0] ? 1 : n <= cuts[1] ? 2 : n <= cuts[2] ? 3 : 4);
 })();
-const shot = (site) => fs.readFileSync(path.join(scripts, 'shots', `${site}.jpg`)).toString('base64');
+const shotFile = (name) => path.join(scripts, 'shots', name);
+// width / height of a JPEG, read from its SOF marker
+function jpegSize(file) {
+  const b = fs.readFileSync(file);
+  for (let i = 2; i < b.length; ) {
+    const marker = b[i + 1];
+    const len = b.readUInt16BE(i + 2);
+    if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) return { w: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+    i += 2 + len;
+  }
+  throw new Error(`No size in ${file}`);
+}
 
 // ---------- hero: name, a quiet year of contributions, four numbers ----------
 function hero(t) {
@@ -208,23 +223,33 @@ function hero(t) {
   return svg(W, H, `Nurfitri Azim, designer who builds websites that move. ${fmt(total)} contributions in the last year.`, ctx.css.join(''), `<defs>${ctx.defs}</defs>${b}`);
 }
 
-// ---------- one row per project: screenshot, name, line, stack, link ----------
-function workRow(t, [, site, name, blurb, tags, opts = {}], last) {
-  const W = 1600;
-  const H = 236;
+// ---------- one card per project: a moving preview, then name, site, line and stack ----------
+// Holds at the start, glides to the end, holds, returns. Reduced motion shows the start.
+function workCard(t, [slug, site, name, blurb, tags, { shot, pan, dur }]) {
+  const W = 800;
+  const PW = 800;
+  const PH = 500;
+  const H = 676;
+  const file = shotFile(shot);
+  const { w, h } = jpegSize(file);
+  const iw = pan === 'y' ? PW : (PH * w) / h;
+  const ih = pan === 'y' ? (PW * h) / w : PH;
+  const travel = pan === 'y' ? ih - PH : iw - PW;
+  const axis = pan === 'y' ? 'Y' : 'X';
+  const css = [
+    `.pv{animation:pv ${dur}s cubic-bezier(.45,0,.55,1) infinite}@keyframes pv{0%,8%{transform:translate${axis}(0)}84%,92%{transform:translate${axis}(-${num(travel)}px)}100%{transform:translate${axis}(0)}}`,
+    reduce('.pv'),
+  ];
   let b = `<rect width="${W}" height="${H}" fill="${t.bg}"/>`;
-  // opts.fit = a background colour: show the whole capture on it instead of cropping to fill
-  if (opts.fit) b += `<rect x="0" y="18" width="320" height="200" rx="12" fill="${opts.fit}"/>`;
-  b += `<image href="data:image/jpeg;base64,${shot(site)}" x="0" y="18" width="320" height="200" preserveAspectRatio="${opts.fit ? 'xMidYMid meet' : 'xMidYMin slice'}" clip-path="url(#th)"/>`;
-  b += `<rect x="0.5" y="18.5" width="319" height="199" rx="12" fill="none" stroke="${t.line}"/>`;
-  b += T(F.semi, name, 368, 86, 40, t.fg);
-  b += T(F.regular, blurb, 368, 134, 28, t.muted);
-  b += T(F.mono, tags, 368, 192, 20, t.faint);
-  b += T(F.regular, site, W - 46, 86, 24, t.muted, { align: 'end' });
-  const ax = W - 22;
-  b += `<path d="M${ax - 14} 84L${ax} 70M${ax - 11} 70H${ax}V81" fill="none" stroke="${t.accent}" stroke-width="2.5"/>`;
-  if (!last) b += `<path d="M0 ${H - 1}H${W}" stroke="${t.line}" stroke-width="2"/>`;
-  return svg(W, H, `${name}: ${blurb}. Opens ${site}.`, '', `<defs><clipPath id="th"><rect x="0" y="18" width="320" height="200" rx="12"/></clipPath></defs>${b}`);
+  b += `<g clip-path="url(#pc)"><rect width="${PW}" height="${PH}" fill="${t.surface}"/><image class="pv" href="data:image/jpeg;base64,${fs.readFileSync(file).toString('base64')}" x="0" y="0" width="${num(iw)}" height="${num(ih)}" preserveAspectRatio="none"/></g>`;
+  b += `<rect x="1" y="1" width="${PW - 2}" height="${PH - 2}" rx="16" fill="none" stroke="${t.line}" stroke-width="2"/>`;
+  b += T(F.semi, name, 0, 562, 38, t.fg);
+  b += T(F.regular, site, W - 26, 560, 22, t.muted, { align: 'end' });
+  const ax = W - 4;
+  b += `<path d="M${ax - 13} 558L${ax} 545M${ax - 10} 545H${ax}V555" fill="none" stroke="${t.accent}" stroke-width="2.5"/>`;
+  b += T(F.regular, blurb, 0, 606, 26, t.muted);
+  b += T(F.mono, tags, 0, 648, 20, t.faint);
+  return svg(W, H, `${name}: ${blurb}. Opens ${site}.`, css.join(''), `<defs><clipPath id="pc"><rect width="${PW}" height="${PH}" rx="16"/></clipPath></defs>${b}`);
 }
 
 // ---------- what I do: three tiles, each with a small animation ----------
@@ -366,7 +391,7 @@ function footer(t) {
 for (const f of fs.readdirSync(out).filter((f) => f.endsWith('.svg'))) fs.unlinkSync(path.join(out, f));
 for (const [mode, t] of Object.entries(themes)) {
   fs.writeFileSync(path.join(out, `hero-${mode}.svg`), hero(t));
-  WORK.forEach((w, i) => fs.writeFileSync(path.join(out, `work-${w[0]}-${mode}.svg`), workRow(t, w, i === WORK.length - 1)));
+  WORK.forEach((w) => fs.writeFileSync(path.join(out, `card-${w[0]}-${mode}.svg`), workCard(t, w)));
   fs.writeFileSync(path.join(out, `services-${mode}.svg`), services(t));
   fs.writeFileSync(path.join(out, `stack-${mode}.svg`), stack(t, mode));
   fs.writeFileSync(path.join(out, `footer-${mode}.svg`), footer(t));
