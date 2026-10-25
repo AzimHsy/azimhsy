@@ -132,8 +132,10 @@ const weeks = cal.weeks.map((w) => w.contributionDays);
 const days = weeks.flat();
 const total = cal.totalContributions;
 const activeDays = days.filter((d) => d.contributionCount > 0).length;
+// Current streak, GitHub-style: a today with nothing yet doesn't break it (the daily refresh
+// can run before the day's first commit).
 let streak = 0;
-for (const d of days) streak = d.contributionCount > 0 ? streak + 1 : 0;
+for (const d of days.at(-1).contributionCount > 0 ? days : days.slice(0, -1)) streak = d.contributionCount > 0 ? streak + 1 : 0;
 const months = [];
 for (const d of days) {
   const m = d.date.slice(0, 7);

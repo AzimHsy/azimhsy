@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "stats": "node scripts/fetch-stats.mjs"
   },
   "devDependencies": {
     "opentype.js": "2.0.0",

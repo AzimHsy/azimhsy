@@ -1,0 +1,44 @@
+# Refreshes the contribution numbers in the profile images once a day.
+# Commits only when the numbers changed; bot commits don't count on Azim's graph.
+name: Refresh stats
+
+on:
+  schedule:
+    - cron: '30 15 * * *' # 23:30 in Kuala Lumpur
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-stats
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm stats
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: pnpm build
+      - name: Commit if the numbers changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/data assets
+          if git diff --cached --quiet; then
+            echo "No change today."
+          else
+            git commit -m "Refresh stats"
+            git push
+          fi
