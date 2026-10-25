@@ -10,7 +10,15 @@ const file = path.join(path.dirname(fileURLToPath(import.meta.url)), 'data/gh-st
 const token = process.env.GITHUB_TOKEN;
 if (!token) throw new Error('GITHUB_TOKEN is not set');
 
-const query = `{ user(login: "AzimHsy") { contributionsCollection { contributionCalendar {
+// Count days in Kuala Lumpur time wherever this runs. The Action's token has no timezone, so
+// without this its days were UTC and Azim's 1–5 AM commits moved to the day before.
+const KL = '+08:00';
+const klDate = (ms) => new Date(ms + 8 * 3600e3).toISOString().slice(0, 10);
+const today = klDate(Date.now());
+const from = `${klDate(Date.parse(`${today}T00:00:00${KL}`) - 364 * 86400e3)}T00:00:00${KL}`;
+const to = `${today}T23:59:59${KL}`;
+
+const query = `{ user(login: "AzimHsy") { contributionsCollection(from: "${from}", to: "${to}") { contributionCalendar {
   totalContributions weeks { contributionDays { date contributionCount } } } } } }`;
 const res = await fetch('https://api.github.com/graphql', {
   method: 'POST',
