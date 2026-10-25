@@ -290,42 +290,54 @@ function services(t) {
   return svg(W, H, items.map(([ti, d]) => `${ti}: ${d}`).join(' '), css.join(''), b);
 }
 
-// ---------- stack: two rows of chips sliding in opposite directions ----------
-function stack(t) {
+// ---------- stack: three rows of chips sliding, alternating direction ----------
+// Rows: frontend + motion, backend + data, mobile + commerce + tools.
+// simple-icons has no Java or VS Code logo (both removed at the owners' request):
+// Java uses the OpenJDK cup in Java orange, VS Code gets a plain </> mark.
+const STACK = [
+  [['HTML', si.siHtml5], ['CSS', si.siCss], ['JavaScript', si.siJavascript], ['TypeScript', si.siTypescript], ['React', si.siReact], ['Next.js', si.siNextdotjs], ['Tailwind CSS', si.siTailwindcss], ['GSAP', si.siGsap], ['Framer Motion', si.siFramer], ['Figma', si.siFigma]],
+  [['Node.js', si.siNodedotjs], ['Express', si.siExpress], ['PHP', si.siPhp], ['Laravel', si.siLaravel], ['Java', { ...si.siOpenjdk, hex: 'F89820' }], ['Spring', si.siSpring], ['Supabase', si.siSupabase], ['PostgreSQL', si.siPostgresql], ['MySQL', si.siMysql], ['Payload CMS', si.siPayloadcms]],
+  [['Expo', si.siExpo], ['Kotlin', si.siKotlin], ['Android', si.siAndroid], ['Flutter', si.siFlutter], ['Dart', si.siDart], ['Shopify', si.siShopify], ['WooCommerce', si.siWoocommerce], ['Cloudflare', si.siCloudflare], ['Docker', si.siDocker], ['Git', si.siGit], ['GitHub', si.siGithub], ['Postman', si.siPostman], ['VS Code', null]],
+];
+// brand colours that disappear on one of the backgrounds
+const ICON_FIX = { dark: { Flutter: '#47c5fb' }, light: { JavaScript: '#c9a800' } };
+
+function stack(t, mode) {
   const W = 1600;
-  const H = 200;
+  const H = 304;
   const css = [];
-  const rows = [
-    [['Next.js', si.siNextdotjs], ['React', si.siReact], ['TypeScript', si.siTypescript], ['Tailwind CSS', si.siTailwindcss], ['Supabase', si.siSupabase], ['Payload CMS', si.siPayloadcms], ['PostgreSQL', si.siPostgresql]],
-    [['Cloudflare', si.siCloudflare], ['GSAP', si.siGsap], ['Framer Motion', si.siFramer], ['Shopify', si.siShopify], ['Figma', si.siFigma], ['Expo', si.siExpo], ['WooCommerce', si.siWoocommerce]],
-  ];
-  const colour = (hex) => (['000000', '1C2024'].includes(hex.toUpperCase()) ? t.fg : `#${hex}`);
+  const colour = (label, hex) => ICON_FIX[mode][label] ?? (['000000', '0A0A0A', '181717', '1C2024'].includes(hex.toUpperCase()) ? t.fg : `#${hex}`);
   const defs = `<linearGradient id="fade"><stop offset="0" stop-color="#000"/><stop offset=".06" stop-color="#fff"/><stop offset=".94" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="mk"><rect width="${W}" height="${H}" fill="url(#fade)"/></mask>`;
   let b = `<rect width="${W}" height="${H}" fill="${t.bg}"/><g mask="url(#mk)">`;
-  rows.forEach((row, ri) => {
-    const y = ri === 0 ? 8 : 110;
+  STACK.forEach((row, ri) => {
+    const y = 8 + ri * 102;
     let x = 0;
     let chips = '';
     let rowW = 0;
-    for (let copy = 0; copy < 3; copy++)
+    for (let copy = 0; copy < 2; copy++)
       row.forEach(([label, icon]) => {
         const w = 24 + 32 + 14 + width(F.regular, label, 25) + 28;
         chips += `<rect x="${num(x)}" y="${y}" width="${num(w)}" height="72" rx="36" fill="${t.surface}" stroke="${t.line}" stroke-width="2"/>`;
-        chips += `<path d="${icon.path}" transform="translate(${num(x + 24)} ${y + 20}) scale(${(32 / 24).toFixed(4)})" fill="${colour(icon.hex)}"/>`;
+        chips += icon
+          ? `<path d="${icon.path}" transform="translate(${num(x + 24)} ${y + 20}) scale(${(32 / 24).toFixed(4)})" fill="${colour(label, icon.hex)}"/>`
+          : T(F.mono, '</>', x + 24 + 16, y + 45, 20, '#3b9ee8', { align: 'middle' });
         chips += T(F.regular, label, x + 24 + 32 + 14, y + 45, 25, t.fg, { attr: 'fill-opacity=".9"' });
         x += w + 16;
         if (copy === 0) rowW = x;
       });
+    // same speed on every row, whatever its length
+    const dur = (rowW / 40).toFixed(1);
+    const rtl = ri % 2 === 0;
     b += `<g class="mq${ri}">${chips}</g>`;
     css.push(
-      ri === 0
-        ? `.mq0{animation:mq0 44s linear infinite}@keyframes mq0{to{transform:translateX(-${num(rowW)}px)}}`
-        : `.mq1{transform:translateX(-${num(rowW)}px);animation:mq1 50s linear infinite}@keyframes mq1{from{transform:translateX(-${num(rowW)}px)}to{transform:translateX(0)}}`,
+      rtl
+        ? `.mq${ri}{animation:mq${ri} ${dur}s linear infinite}@keyframes mq${ri}{to{transform:translateX(-${num(rowW)}px)}}`
+        : `.mq${ri}{transform:translateX(-${num(rowW)}px);animation:mq${ri} ${dur}s linear infinite}@keyframes mq${ri}{from{transform:translateX(-${num(rowW)}px)}to{transform:translateX(0)}}`,
     );
   });
   b += '</g>';
-  css.push(reduce('.mq0,.mq1'));
-  return svg(W, H, `Stack: ${rows.flat().map(([l]) => l).join(', ')}`, css.join(''), `<defs>${defs}</defs>${b}`);
+  css.push(reduce('.mq0,.mq1,.mq2'));
+  return svg(W, H, `Stack: ${STACK.flat().map(([l]) => l).join(', ')}`, css.join(''), `<defs>${defs}</defs>${b}`);
 }
 
 // ---------- footer: the ask and the email ----------
@@ -351,7 +363,7 @@ for (const [mode, t] of Object.entries(themes)) {
   fs.writeFileSync(path.join(out, `hero-${mode}.svg`), hero(t));
   WORK.forEach((w, i) => fs.writeFileSync(path.join(out, `work-${w[0]}-${mode}.svg`), workRow(t, w, i === WORK.length - 1)));
   fs.writeFileSync(path.join(out, `services-${mode}.svg`), services(t));
-  fs.writeFileSync(path.join(out, `stack-${mode}.svg`), stack(t));
+  fs.writeFileSync(path.join(out, `stack-${mode}.svg`), stack(t, mode));
   fs.writeFileSync(path.join(out, `footer-${mode}.svg`), footer(t));
 }
 for (const f of fs.readdirSync(out)) console.log(f, (fs.statSync(path.join(out, f)).size / 1024).toFixed(1) + ' KB');

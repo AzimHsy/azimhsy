@@ -26,7 +26,7 @@ I’m Azim. I design and build websites and online stores for Malaysian business
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="./assets/stack-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="./assets/stack-light.svg">
-  <img alt="Stack: Next.js, React, TypeScript, Tailwind CSS, Supabase, Payload CMS, PostgreSQL, Cloudflare, GSAP, Framer Motion, Shopify, Figma, Expo, WooCommerce" src="./assets/stack-dark.svg" width="100%">
+  <img alt="Stack. Frontend: HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS, GSAP, Framer Motion, Figma. Backend and data: Node.js, Express, PHP, Laravel, Java, Spring, Supabase, PostgreSQL, MySQL, Payload CMS. Mobile, commerce and tools: Expo, Kotlin, Android, Flutter, Dart, Shopify, WooCommerce, Cloudflare, Docker, Git, GitHub, Postman, VS Code" src="./assets/stack-dark.svg" width="100%">
 </picture>
 
 <details>
