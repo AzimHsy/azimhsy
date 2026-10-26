@@ -42,8 +42,9 @@ const themes = {
   },
 };
 
-// Selected Work, a 2×2 grid: a looping clip of the real site (assets/clip-<slug>.webp, recorded
-// with scripts/record-clip.cjs) over a caption image built here, one per theme.
+// Selected Work, a 2×2 grid: a still of the live site (assets/thumb-<slug>.webp, 960×600 WebP with
+// rounded corners) over a caption image built here, one per theme. Looping clips were tried and
+// dropped (26 Oct): four animated images made the page lag.
 const WORK = [
   ['motionlab', 'motionlab.digital', 'Motion Lab', 'Film agency site with a reel you drag and throw', 'Next.js   Framer Motion   GSAP   Lenis'],
   ['homlux', 'homlux.nurfitriazim.com', 'Homlux', 'Scroll-driven homepage for an interior studio', 'Next.js   GSAP ScrollTrigger   Lenis   Design: Afdzal'],
