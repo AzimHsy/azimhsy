@@ -30,7 +30,7 @@ const themes = {
     accent: '#e7a8bf',
     stat: ['#c3b9ff', '#f0b8cb', '#f2d0a7', '#a8dcd6'],
     viz: ['#a8dcd6', '#f2d0a7', '#f0b8cb', '#c3b9ff'],
-    glow: 0.16,
+    glow: 0.62,
   },
   light: {
     bg: '#ffffff', surface: '#f6f8fa', fg: '#1f2328', muted: '#59636e', faint: '#818b98', line: '#d1d9e0',
@@ -38,7 +38,7 @@ const themes = {
     accent: '#d4688f',
     stat: ['#6f5bd9', '#c9527d', '#b7772a', '#2f8f86'],
     viz: ['#5fb3aa', '#e0a85c', '#e58aa9', '#9b8cf0'],
-    glow: 0.1,
+    glow: 0.42,
   },
 };
 
@@ -162,9 +162,23 @@ function hero(t) {
   const H = 600;
   const ctx = { defs: '', css: [], n: 0 };
   let b = `<rect width="${W}" height="${H}" fill="${t.bg}"/>`;
-  ctx.defs += `<filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="90"/></filter>`;
-  b += `<g filter="url(#blur)" opacity="${t.glow}"><circle class="g0" cx="1380" cy="60" r="230" fill="#8b7bff"/><circle class="g1" cx="1050" cy="260" r="180" fill="#ff8fb5"/></g>`;
-  ctx.css.push(`.g0{animation:g0 18s ease-in-out infinite alternate}@keyframes g0{to{transform:translate(-120px,60px)}}.g1{animation:g1 22s ease-in-out infinite alternate}@keyframes g1{to{transform:translate(140px,-50px)}}`);
+  // Three soft glows wandering around the hero. Radial gradients, not a blur filter:
+  // moving a blurred shape makes the browser re-blur it every frame, moving a gradient is cheap.
+  const glows = [
+    // colour, start x, y, radius, seconds, path through the hero
+    ['#8b7bff', 1260, 140, 520, 22, [[-420, 120], [-820, 30], [-360, -90]]],
+    ['#ff8fb5', 880, 400, 430, 18, [[380, -170], [-460, -50]]],
+    ['#f2c08f', 320, 160, 380, 26, [[560, 230], [180, -60]]],
+  ];
+  b += `<g clip-path="url(#hc)" opacity="${t.glow}">`;
+  glows.forEach(([col, x, y, r, s, path], i) => {
+    ctx.defs += `<radialGradient id="gl${i}"><stop offset="0" stop-color="${col}" stop-opacity=".5"/><stop offset=".55" stop-color="${col}" stop-opacity=".16"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></radialGradient>`;
+    b += `<circle class="g${i}" cx="${x}" cy="${y}" r="${r}" fill="url(#gl${i})"/>`;
+    const stops = path.map(([dx, dy], k) => `${Math.round(((k + 1) * 100) / (path.length + 1))}%{transform:translate(${dx}px,${dy}px)}`).join('');
+    ctx.css.push(`.g${i}{animation:g${i} ${s}s ease-in-out infinite}@keyframes g${i}{0%,100%{transform:translate(0,0)}${stops}}`);
+  });
+  b += '</g>';
+  ctx.defs += `<clipPath id="hc"><rect width="${W}" height="${H}"/></clipPath>`;
 
   b += T(F.semi, 'Nurfitri Azim', 0, 80, 76, t.fg, { tracking: -0.02 });
   b += T(F.regular, 'Designer who builds websites that move.', 0, 136, 32, t.muted);
@@ -205,7 +219,7 @@ function hero(t) {
     b += c.svg + T(F.regular, label, i * 400 + c.width + 14, 560, 26, t.muted);
   });
 
-  ctx.css.push(reduce('.halo,.today,.odo,.g0,.g1'));
+  ctx.css.push(reduce('.halo,.today,.odo,.g0,.g1,.g2'));
   return svg(W, H, `Nurfitri Azim, designer who builds websites that move. ${fmt(total)} contributions in the last year.`, ctx.css.join(''), `<defs>${ctx.defs}</defs>${b}`);
 }
 
