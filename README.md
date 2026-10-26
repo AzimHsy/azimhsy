@@ -9,12 +9,18 @@ I’m Azim. I design and build websites and online stores for Malaysian business
 ###### (SELECTED WORK)
 
 <p>
-<a href="https://motionlab.digital" title="Open motionlab.digital"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-motionlab-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-motionlab-light.svg"><img alt="Motion Lab: film agency site with a reel you drag and throw" src="./assets/card-motionlab-dark.svg" width="49%"></picture></a>
-<a href="https://homlux.nurfitriazim.com" title="Open homlux.nurfitriazim.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-homlux-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-homlux-light.svg"><img alt="Homlux: scroll-driven homepage for an interior studio, design by Afdzal Design" src="./assets/card-homlux-dark.svg" width="49%"></picture></a>
+<a href="https://motionlab.digital" title="Open motionlab.digital"><img src="./assets/clip-motionlab.webp" width="49%" alt="Motion Lab: the poster wall scrolling on the live site"></a>
+<a href="https://homlux.nurfitriazim.com" title="Open homlux.nurfitriazim.com"><img src="./assets/clip-homlux.webp" width="49%" alt="Homlux: scrolling through the live homepage"></a>
+<br>
+<a href="https://motionlab.digital" title="Open motionlab.digital"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-motionlab-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-motionlab-light.svg"><img alt="Motion Lab: film agency site with a reel you drag and throw" src="./assets/caption-motionlab-dark.svg" width="49%"></picture></a>
+<a href="https://homlux.nurfitriazim.com" title="Open homlux.nurfitriazim.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-homlux-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-homlux-light.svg"><img alt="Homlux: scroll-driven homepage for an interior studio, design by Afdzal Design" src="./assets/caption-homlux-dark.svg" width="49%"></picture></a>
 </p>
 <p>
-<a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director that scrolls sideways" src="./assets/card-thstudio-dark.svg" width="49%"></picture></a>
-<a href="https://bravemy.com" title="Open bravemy.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/card-brave-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/card-brave-light.svg"><img alt="Brave: kids’ playwear store with its own checkout and admin" src="./assets/card-brave-dark.svg" width="49%"></picture></a>
+<a href="https://thstudio.site" title="Open thstudio.site"><img src="./assets/clip-thstudio.webp" width="49%" alt="TH Studio: the cases sliding sideways on the live site"></a>
+<a href="https://bravemy.com" title="Open bravemy.com"><img src="./assets/clip-brave.webp" width="49%" alt="Brave: scrolling through the live store"></a>
+<br>
+<a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director that scrolls sideways" src="./assets/caption-thstudio-dark.svg" width="49%"></picture></a>
+<a href="https://bravemy.com" title="Open bravemy.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-brave-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-brave-light.svg"><img alt="Brave: kids’ playwear store with its own checkout and admin" src="./assets/caption-brave-dark.svg" width="49%"></picture></a>
 </p>
 
 ###### (WHAT I DO)
