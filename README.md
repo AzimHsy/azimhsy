@@ -1,7 +1,7 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg?v=683b0d59">
-  <source media="(prefers-color-scheme: light)" srcset="./assets/hero-light.svg?v=e1f70f92">
-  <img alt="Nurfitri Azim, designer who builds websites that move, with a year of contributions" src="./assets/hero-dark.svg?v=683b0d59" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/hero-dark.svg?v=c1b3bdac">
+  <source media="(prefers-color-scheme: light)" srcset="./assets/hero-light.svg?v=37c2b63f">
+  <img alt="Nurfitri Azim, designer who builds websites that move, with a year of contributions" src="./assets/hero-dark.svg?v=c1b3bdac" width="100%">
 </picture>
 
 I’m Azim. I design and build websites and online stores for Malaysian businesses, from the first sketch to the checkout and the admin panel the owner uses every day. Software Development student at UTeM.
