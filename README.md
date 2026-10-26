@@ -16,7 +16,7 @@ I’m Azim. I design and build websites and online stores for Malaysian business
 <a href="https://homlux.nurfitriazim.com" title="Open homlux.nurfitriazim.com"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-homlux-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-homlux-light.svg"><img alt="Homlux: scroll-driven homepage for an interior studio, design by Afdzal Design" src="./assets/caption-homlux-dark.svg" width="49%"></picture></a>
 </p>
 <p>
-<a href="https://thstudio.site" title="Open thstudio.site"><img src="./assets/thumb-thstudio.webp" width="49%" alt="TH Studio: the live portfolio"></a>
+<a href="https://thstudio.site" title="Open thstudio.site"><img src="./assets/thumb-thstudio.webp" width="49%" alt="TH Studio: the projects grid on the live site"></a>
 <a href="https://bravemy.com" title="Open bravemy.com"><img src="./assets/thumb-brave.webp" width="49%" alt="Brave: the live store"></a>
 <br>
 <a href="https://thstudio.site" title="Open thstudio.site"><picture><source media="(prefers-color-scheme: dark)" srcset="./assets/caption-thstudio-dark.svg"><source media="(prefers-color-scheme: light)" srcset="./assets/caption-thstudio-light.svg"><img alt="TH Studio: portfolio for an art director that scrolls sideways" src="./assets/caption-thstudio-dark.svg" width="49%"></picture></a>
