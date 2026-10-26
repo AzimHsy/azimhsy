@@ -4,6 +4,7 @@
 // without web fonts. Motion is CSS / SMIL inside the SVG; reduced motion shows the final state.
 // Numbers come from scripts/data/gh-stats.json (the GitHub GraphQL contributions query).
 // Run: pnpm build
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -382,3 +383,11 @@ for (const [mode, t] of Object.entries(themes)) {
   fs.writeFileSync(path.join(out, `footer-${mode}.svg`), footer(t));
 }
 for (const f of fs.readdirSync(out)) console.log(f, (fs.statSync(path.join(out, f)).size / 1024).toFixed(1) + ' KB');
+
+// Cache-busting: GitHub and browsers keep README images by URL for minutes or longer, so every
+// asset link in README.md carries a short hash of its file — a changed file gets a new URL at once.
+const readmeFile = path.join(root, 'README.md');
+const stamped = fs
+  .readFileSync(readmeFile, 'utf8')
+  .replace(/(\.\/assets\/[\w.-]+?\.(?:svg|webp|gif))(\?v=[0-9a-f]+)?/g, (_, p) => `${p}?v=${crypto.createHash('sha1').update(fs.readFileSync(path.join(root, p))).digest('hex').slice(0, 8)}`);
+fs.writeFileSync(readmeFile, stamped);
