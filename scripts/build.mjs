@@ -27,19 +27,21 @@ const F = {
 const themes = {
   dark: {
     bg: '#0d1117', surface: '#151b23', fg: '#f0f6fc', muted: '#9198a1', faint: '#656c76', line: '#3d444d',
-    levels: ['#151b23', '#28243f', '#40366a', '#76598f', '#d7a3b9'],
+    levels: ['#151b23', '#3a3163', '#51438a', '#76598f', '#d7a3b9'],
     accent: '#e7a8bf',
     stat: ['#c3b9ff', '#f0b8cb', '#f2d0a7', '#a8dcd6'],
     viz: ['#a8dcd6', '#f2d0a7', '#f0b8cb', '#c3b9ff'],
     glow: 0.62,
+    twinkle: [0.7, 0.6], // peak strength of a blink: empty cell, active cell
   },
   light: {
     bg: '#ffffff', surface: '#f6f8fa', fg: '#1f2328', muted: '#59636e', faint: '#818b98', line: '#d1d9e0',
-    levels: ['#eff2f5', '#e4defc', '#c6b6f2', '#a07fd0', '#d9789f'],
+    levels: ['#eff2f5', '#d6cbfa', '#bba6ef', '#a07fd0', '#d9789f'],
     accent: '#d4688f',
     stat: ['#6f5bd9', '#c9527d', '#b7772a', '#2f8f86'],
     viz: ['#5fb3aa', '#e0a85c', '#e58aa9', '#9b8cf0'],
     glow: 0.42,
+    twinkle: [0.55, 0.5],
   },
 };
 
@@ -194,14 +196,30 @@ function hero(t) {
   const cell = Math.round(pitch * 0.78);
   const gy = 200;
   const lastDay = days.at(-1).date;
+  // Twinkle: a scattering of cells blinks now and then, empty ones too, so quiet weeks shimmer
+  // without inventing contributions. Picked and timed by a hash of the date, so the same data
+  // always builds the same image (the nightly Action only commits real changes).
+  const rand = (s) => {
+    let h = 2166136261;
+    for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+    h = Math.imul(h ^ (h >>> 16), 0x85ebca6b); // mix, or dates a day apart hash alike
+    h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+    return ((h ^ (h >>> 16)) >>> 0) / 2 ** 32;
+  };
   weeks.forEach((w, wi) =>
     w.forEach((d) => {
       const today = d.date === lastDay;
-      const y = gy + new Date(`${d.date}T00:00:00Z`).getUTCDay() * pitch;
-      b += `<rect${today ? ' class="today"' : ''} x="${num(wi * pitch)}" y="${num(y)}" width="${cell}" height="${cell}" rx="4" fill="${today ? t.accent : t.levels[level(d.contributionCount)]}"/>`;
+      const x = num(wi * pitch);
+      const y = num(gy + new Date(`${d.date}T00:00:00Z`).getUTCDay() * pitch);
+      b += `<rect${today ? ' class="today"' : ''} x="${x}" y="${y}" width="${cell}" height="${cell}" rx="4" fill="${today ? t.accent : t.levels[level(d.contributionCount)]}"/>`;
+      const empty = d.contributionCount === 0;
+      if (today || rand(d.date) > (empty ? 0.45 : 0.25)) return;
+      const dur = 5 + rand(`${d.date}d`) * 6;
+      b += `<rect class="tw" x="${x}" y="${y}" width="${cell}" height="${cell}" rx="4" fill="${empty ? t.levels[3] : t.accent}" fill-opacity="${empty ? t.twinkle[0] : t.twinkle[1]}" style="animation-duration:${dur.toFixed(1)}s;animation-delay:-${(rand(`${d.date}o`) * dur).toFixed(1)}s"/>`;
     }),
   );
   ctx.css.push(`.today{animation:today 2.4s ease-in-out infinite}@keyframes today{50%{opacity:.35}}`);
+  ctx.css.push(`.tw{opacity:0;animation:tw 8s ease-in-out infinite}@keyframes tw{0%,82%,100%{opacity:0}91%{opacity:1}}`);
   let lastMonth = '';
   weeks.forEach((w, wi) => {
     const mo = w[0].date.slice(5, 7);
@@ -220,7 +238,7 @@ function hero(t) {
     b += c.svg + T(F.regular, label, i * 400 + c.width + 14, 560, 26, t.muted);
   });
 
-  ctx.css.push(reduce('.halo,.today,.odo,.g0,.g1,.g2'));
+  ctx.css.push(reduce('.halo,.today,.odo,.g0,.g1,.g2,.tw'));
   return svg(W, H, `Nurfitri Azim, designer who builds websites that move. ${fmt(total)} contributions in the last year.`, ctx.css.join(''), `<defs>${ctx.defs}</defs>${b}`);
 }
 
