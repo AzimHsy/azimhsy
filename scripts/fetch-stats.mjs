@@ -18,7 +18,7 @@ const today = klDate(Date.now());
 const from = `${klDate(Date.parse(`${today}T00:00:00${KL}`) - 364 * 86400e3)}T00:00:00${KL}`;
 const to = `${today}T23:59:59${KL}`;
 
-const query = `{ user(login: "AzimHsy") { contributionsCollection(from: "${from}", to: "${to}") { contributionCalendar {
+const query = `{ user(login: "nrfitriazim") { contributionsCollection(from: "${from}", to: "${to}") { contributionCalendar {
   totalContributions weeks { contributionDays { date contributionCount } } } } } }`;
 const res = await fetch('https://api.github.com/graphql', {
   method: 'POST',
